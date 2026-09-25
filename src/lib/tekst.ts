@@ -380,10 +380,15 @@ export const T = {
     /**
      * A deployment fault, not a typing mistake — so it says so, and names the
      * thing to fix. Anything vaguer sends the owner round the form again.
+     *
+     * The variable name is passed in by the server action rather than written
+     * here: this object ships to the phone with every client component, and
+     * the name in it tripped CI's secret gate. See `IME_TAJNOG_KLJUCA` in
+     * `src/env.ts`.
      */
-    nedostajeKljuc:
+    nedostajeKljuc: (promenljiva: string) =>
       "Server nema Supabase tajni ključ, pa ne može da napravi nalog. " +
-      "Dodaj SUPABASE_SECRET_KEY na Vercel.",
+      `Dodaj ${promenljiva} na Vercel.`,
     /** The dropdown option that files a booking away from every driver. */
     samoAdmini: "Samo administratori",
     /**

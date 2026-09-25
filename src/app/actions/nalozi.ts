@@ -24,6 +24,7 @@ import {
   upisiProfil,
 } from "@/db/queries";
 import { zahtevajAdmina } from "@/lib/auth";
+import { IME_TAJNOG_KLJUCA } from "@/env";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { T } from "@/lib/tekst";
 
@@ -110,7 +111,7 @@ export async function napraviNalog(
   try {
     supabase = supabaseAdmin();
   } catch {
-    return { ok: false, greska: T.timovi.nedostajeKljuc };
+    return { ok: false, greska: T.timovi.nedostajeKljuc(IME_TAJNOG_KLJUCA) };
   }
 
   const { data, error } = await supabase.auth.admin.createUser({

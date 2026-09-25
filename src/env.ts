@@ -43,6 +43,18 @@ export const supabasePublishableKey = () => {
 };
 
 /**
+ * The secret key's variable *name*, for the one message that has to say it —
+ * `T.timovi.nedostajeKljuc`, shown to an owner when the key is missing on
+ * Vercel. Spelled here, in server code, and not in `src/lib/tekst.ts`: every
+ * client component imports `T` whole, so a name written there ships to the
+ * phone and fails CI's "Nijedna tajna u klijentskom paketu" gate. That gate is
+ * right to look for the name — a stray `process.env.…` read in client code
+ * looks exactly like it in a bundle — so the name stays out rather than the
+ * gate being loosened.
+ */
+export const IME_TAJNOG_KLJUCA = "SUPABASE_SECRET_KEY";
+
+/**
  * Secret key (`sb_secret_…`) — the successor to `service_role`.
  *
  * BYPASSES ROW LEVEL SECURITY. Only ever read this from server code. It has
@@ -50,4 +62,4 @@ export const supabasePublishableKey = () => {
  * importing this function from a client component fails the build, which is
  * the intended outcome.
  */
-export const supabaseSecretKey = () => required("SUPABASE_SECRET_KEY");
+export const supabaseSecretKey = () => required(IME_TAJNOG_KLJUCA);
