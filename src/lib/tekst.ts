@@ -196,6 +196,45 @@ export const T = {
     jednosmerno: "Jednosmerna vožnja",
   },
 
+  /**
+   * The plain-text message for one driver, composed from the legs ticked on
+   * the list and pasted into Viber — see `src/domen/poruka.ts`.
+   *
+   * Separate from `detalji` although some words repeat, because this is a
+   * different reader: a driver on a chat screen, not someone looking at the
+   * app. The labels are therefore short (*Tel*, not *Telefon*) and *Adresa*
+   * drops the *preuzimanja* the form needs — in a pickup list for a driver
+   * every address is a pickup.
+   *
+   * The two section headings are stored already in capitals rather than
+   * passed through `toUpperCase()`. Case mapping is locale-sensitive, and a
+   * heading that shouts is a wording choice, so it belongs here where the
+   * wording is read — not in code that could run under another locale.
+   */
+  poruka: {
+    polazak: "POLAZAK",
+    povratak: "POVRATAK",
+    adresa: "Adresa",
+    telefon: "Tel",
+    cena: "Cena",
+    napomena: "Napomena",
+  },
+
+  /**
+   * Selection mode on the list — SPEC's Viber-retirement feature. The owner
+   * taps *Izaberi*, ticks legs, and *Kopiraj* puts `sastaviPoruku`'s text on
+   * the clipboard. See `src/components/izbor-za-vozaca.tsx`.
+   */
+  izbor: {
+    izaberi: "Izaberi",
+    /** The whole-day toggle in a date heading, spoken after the date itself. */
+    ceoDan: "ceo dan",
+    otkazi: "Otkaži",
+    kopiraj: "Kopiraj",
+    kopirano: "Kopirano — nalepi u Viber",
+    greska: "Kopiranje nije uspelo. Pokušaj ponovo.",
+  },
+
   brisanje: {
     naslov: "Obrisati rezervaciju?",
     /** No undo, no recycle bin — the dialog is the only guard (SPEC §8). */
@@ -390,6 +429,25 @@ export function putnika(n: number): string {
     jedan: "putnik",
     malo: "putnika",
     mnogo: "putnika",
+  });
+}
+
+/**
+ * `1 izabrana nije na ekranu` · `2 izabrane nisu na ekranu` ·
+ * `5 izabranih nije na ekranu` · `21 izabrana nije na ekranu`.
+ *
+ * Reminds the owner, while copying a driver's message, that some of what he
+ * ticked came from an earlier filter and is no longer among the cards on
+ * screen — see `src/components/izbor-za-vozaca.tsx`. The verb agrees with the
+ * count the way `srpskiOblik`'s three categories already split it: singular
+ * for "jedan" and "mnogo" (a genitive-plural quantity is grammatically
+ * singular), plural only for "malo".
+ */
+export function vanEkranaTekst(n: number): string {
+  return pluralizuj(n, {
+    jedan: "izabrana nije na ekranu",
+    malo: "izabrane nisu na ekranu",
+    mnogo: "izabranih nije na ekranu",
   });
 }
 

@@ -237,6 +237,8 @@ reversal rather than absorbed quietly. The note stays out of every list, filter,
 sort and search — it is read on Detalji, by someone who has already found the
 booking — so what the original decision was protecting (a list that cannot be
 made unreadable, and a search that cannot start matching on prose) still holds.
+Since 25.09.2026 it is also printed in the driver's message (§6, *Izaberi*),
+which is the same kind of reader: someone handling that one booking.
 
 All three columns are **nullable, while the form requires the address and the
 price**. Every booking entered before that date has none of them and none can
@@ -463,6 +465,14 @@ Beograd filter in any mode**, because it has no leg left to render. That booking
 is reached the two ways §1 already names — by search, or by filtering its past
 departure date — and this is the same accepted trade-off, not a new one.
 
+> **Reaffirmed 25.09.2026 at the owner's request**, while the driver's message
+> (§6, *Izaberi*) was being designed. A driver for Grčka needs the departures
+> to Grčka *and* the returns from it, and the Grčka filter shows only the
+> first — the returns end in Beograd. Asked whether the filter should reach
+> the returns too, the owner chose to leave it as it is and pick them on the
+> *Povratak* tab by date. The selection surviving a filter change is what
+> makes that one message rather than two.
+
 Grouping the filter by **country** is fine and encouraged — that is a real
 hierarchy in the data. Grouping by **trip-versus-home** is wrong — that is an
 artificial split the client's own data disproves.
@@ -525,6 +535,48 @@ say — is unaffected and stays ↑ Odlazak.
    `Beograd → Hanioti` on a departure — because "↓ Povratak · Beograd" says
    they are arriving but not where from, which is half the dispatch question.
    Where both ends are the same place it collapses to one name.
+
+   **Izaberi — a message for the driver.** Added 25.09.2026 at the owner's
+   request, to retire the Viber group every booking used to be posted to and
+   forwarded from. An icon in the header, beside Podešavanja, turns on a
+   selection mode: a circle appears on each card and each day heading, a tap
+   on a card ticks it instead of opening *Detalji* (the card's › is hidden
+   for as long as that is true), and a tap on a day heading ticks every leg
+   under it on the tab on screen. The *Nova rezervacija* bar becomes
+   *Otkaži* and *Kopiraj (N)*. **Kopiraj** puts a plain-text message on the
+   clipboard, to be pasted into Viber for one driver — no preview and no
+   share menu, the tap copies — then empties the selection and stays in the
+   mode, so the next driver's message cannot pick up this one's bookings.
+   *Otkaži*, or the header icon again, empties it and leaves.
+
+   - **The selection survives a change of filter, search or tab.** Several
+     vans leave for different countries on the same day, and one van's tour
+     is its departures to Grčka on one day and its returns from Grčka on
+     another. The destination filter does not bring those two together —
+     a return's leg ends in Beograd (§5) — so the owner ticks the departures
+     under Grčka and the returns on *Povratak* under the date alone, and one
+     message holds both. A line above the buttons counts the ticked legs the
+     current filter has taken off the screen (*2 izabrane nisu na ekranu*),
+     so what was picked earlier is not forgotten.
+   - **The message.** A section per direction, *POLAZAK* then *POVRATAK*;
+     under each, one heading per date carrying that day's passenger total;
+     then each leg — number, name, head count, route, and *Adresa*, *Tel*,
+     *Cena*, *Napomena*. Numbers run straight through both sections. Dates
+     are always written in full, never *danas* or *sutra*: the message is
+     read the next morning. The order is the list's own (§2), not the order
+     of tapping. A missing address, price or note drops its whole line
+     rather than printing a dash. The route is the card's, so a one-way ride
+     home from abroad reads `Solun → Beograd` under *POVRATAK* (§1).
+   - **Nothing is stored.** The selection lives on the phone for as long as
+     the list is open. There is no "poslato" and there will not be one —
+     that would be a `status`, which standing rule 2 forbids. What was sent
+     is in the Viber chat.
+   - **Prepared on the server, joined on the phone.** iOS lets a page write
+     to the clipboard only synchronously inside the tap, so every leg on
+     screen arrives with the page already formatted — phone number, price,
+     route — and the phone only sorts and joins. That is also why *Kopiraj*
+     works with no signal. `src/domen/poruka.ts`,
+     `src/domen/stavka-poruke.ts`, `src/components/izbor-za-vozaca.tsx`.
 2. **Filter** — bottom sheet, date chips, and the destinations as **chip
    groups**: each country followed by what sits under it, a region with several
    towns opening them on its chevron. A filled chip is one you picked, a soft
@@ -638,6 +690,7 @@ Adding and editing need a connection.
 | List shape | **Two tabs, *Odlasci* and *Povratak*, one row per leg** (§2) | A round trip is two rows and is counted twice. The main leg rule no longer decides what the list shows — it keeps *Detalji* and the direction chip. Added 09.09.2026 at the owner's request, so that a homecoming is visible before the van has left. |
 | Departed, no return date | **Drops off the list**; findable by search **or** by filtering its past departure date | Possible to forget someone who is abroad. **Reaffirmed 01.09.2026** after seeing it on real data, and **again 09.09.2026**: asked directly whether these should be shown at the top of *Povratak* under "Povratak nije dogovoren", the owner chose to leave it as it is. He searches the name and edits, or enters a new booking. |
 | Language | Serbian, **Latin script** | — |
+| Driver's message | **Izaberi → Kopiraj**, plain text on the clipboard, pasted into Viber by hand (§6, added 25.09.2026) | No preview and no share menu — the tap copies. Nothing records what was sent, because that would be a `status`. The Grčka filter does not reach the returns from Grčka; they are picked on *Povratak* by date, and the selection survives the filter change to allow it. |
 | Messenger on *Detalji* | **Viber** (`viber://chat?number=%2B381…`) | Changed 06.09.2026 at the owner's request; it was WhatsApp before. Viber has no `wa.me` equivalent, so the button is a deep link into the app: it does nothing at all on a device without Viber, where the old link at least opened a web chat. *Pozovi* is the fallback. |
 | Delete | **Permanent**, confirm dialog only | No undo, no recycle bin. The nightly backup (§9) is the only net — it is not optional, and it now exists. |
 | Destinations | **Reference data** from eurotravel.rs, plus *Drugo — upiši ručno* (§5, amended 06.09.2026) | A typed place becomes a permanent row. Misspellings cannot be deleted, only deactivated — the case- and diacritic-insensitive match against the existing list is what keeps that rare. |
@@ -861,6 +914,16 @@ All of it drops onto this schema later without a rewrite.
 ---
 
 ## 12. Changelog
+
+**25.09.2026** — *Izaberi*: a message for the driver, to retire the Viber
+group (§6, screen 1). Selection mode on the list, *Kopiraj* puts one driver's
+bookings on the clipboard as plain text. No schema change; the selection is
+phone state only and `src/db/kolone.test.ts` is untouched. The destination
+filter is **deliberately unchanged** — reaffirmed by the owner the same day
+(§5) — and `liste.test.ts` and `faza7-kapija.test.ts` pass without edits,
+which is the evidence that it did not move. The note now reaches one more
+reader, the driver, through this message; it still reaches no list, filter,
+sort or search (§4).
 
 **11.09.2026** — a one-way ride home from abroad (§1, §5) now resolves to
 ↓ Povratak instead of ↑ Odlazak, everywhere direction is read from: the list

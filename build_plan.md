@@ -2386,3 +2386,55 @@ honest start state — no team exists yet for them to belong to.
       Verified in the browser: Grčka then Sitonija leaves only Sitonija lit and
       the badge at 1; Grčka then Hanioti two levels down leaves only Hanioti;
       Kasandra tapped twice ends with nothing selected.
+- [x] ~~Owner request 25.09.2026: retire the Viber group — select bookings on
+      the list and copy one driver's message~~ — built; SPEC §6 (*Izaberi*),
+      §5 (the filter reaffirmed unchanged), §8, changelog.
+
+      **The shape.** An icon in the list header turns on a selection mode;
+      cards and day headings get a circle, *Kopiraj (N)* replaces *Nova
+      rezervacija*, and the tap writes a plain-text message to the clipboard.
+      The text is prepared on the server — `stavkaPoruke` in
+      `src/domen/stavka-poruke.ts` formats phone, price and route for every
+      leg on screen — and the phone only sorts and joins (`sastaviPoruku`,
+      `src/domen/poruka.ts`), because iOS allows a clipboard write only
+      synchronously inside the tap. The selection keeps the formatted legs
+      themselves, so it survives the filter change the owner's flow needs
+      (Grčka on *Odlasci*, then the returns on *Povratak* by date). Verified
+      in the Next 16 source that the page segment's React key ignores search
+      params (`createRouterCacheKey(segment, true)` in `layout-router.js`),
+      which is why client state in `page.tsx` outlives a filter change.
+
+      **One deviation from the written plan.** It sorted the message by a
+      card's index on screen. An index under one filter cannot be compared
+      with an index under another, so Grčka and Hrvatska picks on the same
+      day would have interleaved arbitrarily. The message is sorted by the
+      list's own keys instead — section, date, destination, name, id — and a
+      test pins that it matches `sortirajStavke`.
+
+      **One fix found in the browser.** In the mode the gutter took 40px from
+      each card, and at 390px a return's origin shrank to one letter —
+      "P… → Beograd", on the tab where the origin is the whole question. The
+      card's › is now hidden in the mode (it no longer means anything there),
+      which gives "Perea" its full width; a long origin like "Neos Marmaras"
+      still ellipsizes, to "Neos…".
+
+      **Evidence, 25.09.2026.** `npm run typecheck`, `npm run lint` clean;
+      `npm run test` 25 files, 414 tests (24 new in `poruka.test.ts`, 4 in
+      `tekst.test.ts`); `npm run test:tz` identical in all five zones.
+      `liste.test.ts`, `faza7-kapija.test.ts`, `kolone.test.ts` and
+      `fiksture.ts` unchanged. In Chrome at a 390×844 viewport against the
+      real database, read only: Grčka 15–16.09. showed two departures and
+      *Povratak 0*; *ceo dan* and a card tap ticked both without opening
+      Detalji; the filter changed to 21–27.09. without Grčka kept the ticks
+      and said *2 izabrane nisu na ekranu*; *Kopiraj (4)* wrote the message,
+      and Ctrl+V into a textarea returned the same 474 characters; the
+      selection emptied and the mode stayed on; a second message held only
+      its own booking; *Otkaži* restored *Nova rezervacija* and a tap opened
+      Detalji again; with the dev server stopped (`Failed to fetch`), a tick
+      and *Kopiraj* still wrote the message. No console errors.
+
+      **Not verified.** A real iPhone from the home screen, pasting into
+      Viber — only the owner can do that. The *ceo dan* circle's partial
+      (dash) state was never on screen: no day in the real data has two legs
+      on one tab, and the client component has no test of its own. DevTools'
+      offline switch itself was not used; the dev server was stopped instead.

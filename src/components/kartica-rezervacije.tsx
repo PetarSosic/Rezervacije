@@ -76,8 +76,11 @@ export function KarticaRezervacije({
           <span className="shrink-0">{putnika(rezervacija.brojPutnika)}</span>
         </div>
       </div>
+      {/* `data-strelica` lets selection mode hide the arrow — see
+          `IzborStavke` in izbor-za-vozaca.tsx. */}
       <ChevronRightIcon
         aria-hidden="true"
+        data-strelica=""
         className="size-4 shrink-0 text-muted-foreground"
       />
       <span className="sr-only">{T.lista.otvori}</span>

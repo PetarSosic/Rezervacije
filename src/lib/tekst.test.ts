@@ -1,5 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { filtera, putnika, rezervacija, srpskiOblik, T, uporediTekst } from "./tekst";
+import {
+  filtera,
+  putnika,
+  rezervacija,
+  srpskiOblik,
+  T,
+  uporediTekst,
+  vanEkranaTekst,
+} from "./tekst";
 
 describe("srpskiOblik", () => {
   it.each([
@@ -55,6 +63,17 @@ describe("filtera", () => {
     [7, "7 filtera"],
   ])("%i → %s", (n, ocekivano) => {
     expect(filtera(n)).toBe(ocekivano);
+  });
+});
+
+describe("vanEkranaTekst", () => {
+  it.each([
+    [1, "1 izabrana nije na ekranu"],
+    [2, "2 izabrane nisu na ekranu"],
+    [5, "5 izabranih nije na ekranu"],
+    [21, "21 izabrana nije na ekranu"],
+  ])("%i → %s", (n, ocekivano) => {
+    expect(vanEkranaTekst(n)).toBe(ocekivano);
   });
 });
 
